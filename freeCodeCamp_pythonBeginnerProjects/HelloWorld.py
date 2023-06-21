@@ -1,7 +1,4 @@
-print("Hello World")
-print(int("12"))
+board = ["" for _ in range(9)]
 
-a = [1, 2, 3]
-b = [1, 2, 3]
-
-print(a == b)
+board_2d = [board[i * 3 : (i + 1) * 3] for i in range(3)]
+print(board_2d)
