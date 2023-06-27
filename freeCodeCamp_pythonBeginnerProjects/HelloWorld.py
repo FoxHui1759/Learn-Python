@@ -1,4 +1,7 @@
-board = ["" for _ in range(9)]
+l1 = list(map(str, range(9)))
+print(l1)
 
-board_2d = [board[i * 3 : (i + 1) * 3] for i in range(3)]
-print(board_2d)
+l2 = list(map(int, l1))
+print(l2)
+
+print(l2[0:3])
