@@ -15,16 +15,23 @@ class TicTacToe:
             print("| " + " | ".join(row) + " |")
 
     def make_move(self, move, sign):
-        assert self.board(int(move)) == " "
-        self.board(int(move)) == sign
+        assert self.board[move] == " "
+        self.board[move] = sign
 
     def has_won(self, move, sign):
         row_num = move // 3
         col_num = move % 3
         row = self.board[row_num * 3 : row_num * 3 + 3]
         col = [self.board[col_num + i * 3] for i in range(3)]
-        if all([s == sign for s in col]) and all([s == sign for s in row]):
+
+        if all([s == sign for s in col]) or all([s == sign for s in row]):
             return True
+        diagonal1 = [self.board[i] for i in [0, 4, 8]]
+        diagonal2 = [self.board[i] for i in [2, 4, 6]]
+
+        if all([s == sign for s in diagonal1]) or all([s == sign for s in diagonal2]):
+            return True
+        return False
 
     def draw(self):
         return " " not in self.board
