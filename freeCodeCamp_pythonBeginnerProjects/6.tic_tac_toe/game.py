@@ -4,6 +4,7 @@ from player import Human_Player, Computer_Player
 class TicTacToe:
     def __init__(self):
         self.board = [" " for i in range(9)]
+        self.winner = None
 
     def print_board(self):
         for row in [self.board[3 * i : (3 * i + 3)] for i in range(3)]:
@@ -25,33 +26,38 @@ class TicTacToe:
         col = [self.board[col_num + i * 3] for i in range(3)]
 
         if all([s == sign for s in col]) or all([s == sign for s in row]):
+            self.winner = sign
             return True
         diagonal1 = [self.board[i] for i in [0, 4, 8]]
         diagonal2 = [self.board[i] for i in [2, 4, 6]]
 
         if all([s == sign for s in diagonal1]) or all([s == sign for s in diagonal2]):
+            self.winner = sign
             return True
         return False
 
     def draw(self):
         return " " not in self.board
 
-    def start(self, playerX, playerY):
-        self.print_instruction()
+    def empty_square_count(self):
+        return self.board.count(" ")
+
+    def start(game, playerX, playerY):
+        game.print_instruction()
         sign = "X"
         while True:
             if sign == "X":
-                move = playerX.get_move(self.board)
+                move = playerX.get_move(game)
             else:
-                move = playerY.get_move(self.board)
-            self.make_move(move, sign)
+                move = playerY.get_move(game)
+            game.make_move(move, sign)
             print(f"{sign} makes a move to square {move}")
-            self.print_board()
+            game.print_board()
 
-            if self.has_won(move, sign):
+            if game.has_won(move, sign):
                 print(f"{sign} wins!")
                 break
-            elif self.draw():
+            elif game.draw():
                 print("It's a draw!")
                 break
 
