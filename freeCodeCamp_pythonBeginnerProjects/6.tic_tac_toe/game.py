@@ -67,13 +67,8 @@ class TicTacToe:
 
 if __name__ == "__main__":
     playerX = Human_Player("X")
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "s":
-            playerY = Smart_Computer_Player("O")
-        else:
-            playerY = Computer_Player("O")
-    else:
-        playerY = Computer_Player("O")
+    playerY = Smart_Computer_Player("O")
+
     t = TicTacToe()
 
     t.start(playerX, playerY)

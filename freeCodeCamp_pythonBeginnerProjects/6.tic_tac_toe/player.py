@@ -45,9 +45,7 @@ class Smart_Computer_Player(Player):
     def get_move(self, game):
         if game.empty_square_count() == 9:
             return random.randint(0, 8)
-        move = self.minimax(game, self.sign)["position"]
-        print(move)
-        return move
+        return self.minimax(game, self.sign)["position"]
 
     def minimax(self, state, current_player):
         # print("This is minimax")
@@ -59,7 +57,7 @@ class Smart_Computer_Player(Player):
             return {
                 "position": None,
                 "score": 1 * (1 + state.empty_square_count())
-                if state.winner == opponent
+                if max_player == opponent
                 else -1 * (1 + state.empty_square_count()),
             }
         if state.draw():
@@ -78,7 +76,7 @@ class Smart_Computer_Player(Player):
                 move_result = self.minimax(state, opponent)
                 move_result["position"] = move
 
-                state.board[move] == " "
+                state.board[move] = " "
                 state.winner = None
                 if current_player == max_player:
                     if move_result["score"] > best_result["score"]:
@@ -86,5 +84,4 @@ class Smart_Computer_Player(Player):
                 else:
                     if move_result["score"] < best_result["score"]:
                         best_result = move_result
-        print(best_result)
         return best_result
