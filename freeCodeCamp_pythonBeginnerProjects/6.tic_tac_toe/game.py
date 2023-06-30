@@ -1,4 +1,5 @@
 from player import Human_Player, Computer_Player, Smart_Computer_Player
+import sys
 
 
 class TicTacToe:
@@ -15,10 +16,6 @@ class TicTacToe:
         for row in [[str(_) for _ in range(9)][3 * i : (3 * i + 3)] for i in range(3)]:
             print("| " + " | ".join(row) + " |")
 
-    def make_move(self, move, sign):
-        assert self.board[move] == " "
-        self.board[move] = sign
-
     def has_won(self, move, sign):
         row_num = move // 3
         col_num = move % 3
@@ -26,15 +23,19 @@ class TicTacToe:
         col = [self.board[col_num + i * 3] for i in range(3)]
 
         if all([s == sign for s in col]) or all([s == sign for s in row]):
-            self.winner = sign
             return True
         diagonal1 = [self.board[i] for i in [0, 4, 8]]
         diagonal2 = [self.board[i] for i in [2, 4, 6]]
 
         if all([s == sign for s in diagonal1]) or all([s == sign for s in diagonal2]):
-            self.winner = sign
             return True
         return False
+
+    def make_move(self, move, sign):
+        assert self.board[move] == " "
+        self.board[move] = sign
+        if self.has_won(move, sign):
+            self.winner = sign
 
     def draw(self):
         return " " not in self.board
@@ -54,7 +55,7 @@ class TicTacToe:
             print(f"{sign} makes a move to square {move}")
             game.print_board()
 
-            if game.has_won(move, sign):
+            if game.winner:
                 print(f"{sign} wins!")
                 break
             elif game.draw():
@@ -66,7 +67,13 @@ class TicTacToe:
 
 if __name__ == "__main__":
     playerX = Human_Player("X")
-    playerY = Smart_Computer_Player("O")
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "s":
+            playerY = Smart_Computer_Player("O")
+        else:
+            playerY = Computer_Player("O")
+    else:
+        playerY = Computer_Player("O")
     t = TicTacToe()
 
     t.start(playerX, playerY)
