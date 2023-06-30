@@ -1,4 +1,4 @@
-from player import Human_Player, Computer_Player
+from player import Human_Player, Computer_Player, Smart_Computer_Player
 
 
 class TicTacToe:
@@ -66,7 +66,7 @@ class TicTacToe:
 
 if __name__ == "__main__":
     playerX = Human_Player("X")
-    playerY = Computer_Player("O")
+    playerY = Smart_Computer_Player("O")
     t = TicTacToe()
 
     t.start(playerX, playerY)

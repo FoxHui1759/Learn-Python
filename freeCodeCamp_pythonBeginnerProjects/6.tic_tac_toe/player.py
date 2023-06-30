@@ -1,4 +1,5 @@
 import random
+import math
 
 
 class Player:
@@ -44,16 +45,36 @@ class Smart_Computer_Player(Player):
     def get_move(self, game):
         if game.empty_square_count() == 9:
             return random.randint(0, 8)
-        return self.minimax(game)["position"]
+        return self.minimax(game, self.sign)["position"]
 
-    def minimax(self, state):
+    def minimax(self, state, current_player):
         max_player = self.sign
-        min_player = "X" if self.sign == "O" else "O"
+        opponent = "X" if current_player == "O" else "O"
 
         if state.has_won:
             return {
                 "position": None,
                 "score": 1 * (1 + state.empty_square_count())
-                if state.winner == max_player
+                if state.winner == opponent
                 else -1 * (1 + state.empty_square_count()),
             }
+
+        if current_player == max_player:
+            best_result = {"position": None, "score": -math.inf}
+        else:
+            best_result = {"position": None, "score": math.inf}
+
+        for move in range(9):
+            if state.board[move] == " ":
+                state.make_move(move, current_player)
+                move_result = self.minimax(state, opponent)
+
+                state.board[move] == " "
+                state.winner = None
+                if current_player == max_player:
+                    if move_result["score"] > best_result["score"]:
+                        best_result = move_result
+                        best_result["position"] = move
+                else:
+                    if move_result["score"] < best_result["score"]:
+                        best_result = move_result
