@@ -1,4 +1,5 @@
 import random
+import re
 
 
 class Board:
@@ -37,6 +38,10 @@ class Board:
         for r in range(self.board_size):
             for c in range(self.board_size):
                 self.board[r][c] = self.near_bombs_num(r, c)
+
+    def dig(self, r: int, c: int) -> bool:
+        if self.board[r][c] == "*":
+            return False
 
     def __str__(self) -> str:
         visible_board = [
@@ -82,6 +87,23 @@ class Board:
 def play(board_size=10, bombs_num=10) -> None:
     board = Board(board_size, bombs_num)
     print(board)
+    safe = True
+    while len(board.dug) < (board_size**2 - bombs_num):
+        user_input = re.split(
+            ",(\\s)*", input("Where would you want to dig? Input as row, col: ")
+        )
+        (r, c) = map(int, user_input)
+        safe = board.dig(r, c)
+        if not safe:
+            break
+
+    if board.dug != board_size**2 - bombs_num:
+        print("You lose!")
+        board.dug = [(r, c) for r in range(board_size) for c in range(board_size)]
+        print(board)
+    else:
+        print("You win!")
+        print(board)
 
 
 if __name__ == "__main__":
