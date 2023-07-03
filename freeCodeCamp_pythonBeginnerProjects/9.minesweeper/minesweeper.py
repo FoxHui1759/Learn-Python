@@ -37,11 +37,26 @@ class Board:
     def assign_near_bombs_num(self) -> None:
         for r in range(self.board_size):
             for c in range(self.board_size):
-                self.board[r][c] = self.near_bombs_num(r, c)
+                if self.board[r][c] == "*":
+                    continue
+                else:
+                    self.board[r][c] = self.near_bombs_num(r, c)
 
     def dig(self, r: int, c: int) -> bool:
         if self.board[r][c] == "*":
             return False
+        elif self.board[r][c] > 0:
+            self.dug.add((r, c))
+            return True
+        else:
+            self.dug.add((r, c))
+            for i in range(max(0, r - 1), min(self.board_size - 1, r + 1) + 1):
+                for j in range(max(0, c - 1), min(self.board_size - 1, c + 1) + 1):
+                    if (i, j) in self.dug:
+                        continue
+                    else:
+                        self.dig(i, j)
+            return True
 
     def __str__(self) -> str:
         visible_board = [
@@ -92,12 +107,15 @@ def play(board_size=10, bombs_num=10) -> None:
         user_input = re.split(
             ",(\\s)*", input("Where would you want to dig? Input as row, col: ")
         )
-        (r, c) = map(int, user_input)
+        (r, c) = int(user_input[0]), int(user_input[-1])
+        if (r, c) in board.dug:
+            print("It's dug")
+            continue
         safe = board.dig(r, c)
         if not safe:
             break
-
-    if board.dug != board_size**2 - bombs_num:
+        print(board)
+    if len(board.dug) < board_size**2 - bombs_num:
         print("You lose!")
         board.dug = [(r, c) for r in range(board_size) for c in range(board_size)]
         print(board)
