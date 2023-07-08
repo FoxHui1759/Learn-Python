@@ -1,24 +1,42 @@
-def is_valid(board: list) -> bool:
-    for i in range(len(board)):
-        if len(board[i]) != len(set(board[i])):
-            return False
-    for j in range(len(board[0])):
-        col_j = list(map(lambda x: x[j], board))
-        if len(col_j) != len(set(col_j)):
-            return False
-    
+def is_valid(board: list, r: int, c: int, num: int) -> bool:
+    if num in board[r]:
+        return False
+
+    col = list(map(lambda x: x[c], board))
+    if num in col:
+        return False
+
+    start_row = r // 3 * 3
+    start_col = c // 3 * 3
+    for i in range(start_row, start_row + 3):
+        for j in range(start_col, start_col + 3):
+            if board[i][j] == num:
+                return False
+
     return True
 
+
 def get_first_empty(board: list) -> bool:
-    for r in range(len(example_board)):
-        for c in range(len(example_board[0])):
-            if example_board[r][c] == "-1"
-            return (r , c)
+    for r in range(len(board)):
+        for c in range(len(board[0])):
+            if board[r][c] == -1:
+                return (r, c)
+    return (None, None)
 
 
-def solve_sudoku(board: list) -> None:
+# assume it's a valid board at the beginning
+def solve_sudoku(board: list) -> bool:
     (r, c) = get_first_empty(board)
-    
+    if not r:
+        return True
+    for num in range(1, 10):
+        if is_valid(board, r, c, num):
+            board[r][c] = num
+            if solve_sudoku(board):
+                return True
+            board[r][c] = -1
+    else:
+        return False
 
 
 if __name__ == "__main__":
