@@ -27,7 +27,7 @@ def get_first_empty(board: list) -> bool:
 # assume it's a valid board at the beginning
 def solve_sudoku(board: list) -> bool:
     (r, c) = get_first_empty(board)
-    if not r:
+    if (r, c) == (None, None):
         return True
     for num in range(1, 10):
         if is_valid(board, r, c, num):
