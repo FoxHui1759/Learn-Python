@@ -17,12 +17,12 @@ import numpy as np
 def brighten(image, factor):
     # when we brighten, we just want to make each channel higher by some amount
     # factor is a value > 0, how much you want to brighten the image by (< 1 = darken, > 1 = brighten)
-    pass
+    image.array = image.array * factor
 
 
 def adjust_contrast(image, factor, mid):
     # adjust the contrast by increasing the difference from the user-defined midpoint by factor amount
-    pass
+    image.array = (image.array - mid) * factor + mid
 
 
 def blur(image, kernel_size):
@@ -51,3 +51,6 @@ def combine_images(image1, image2):
 if __name__ == "__main__":
     lake = Image(filename="lake.png")
     city = Image(filename="city.png")
+
+    adjust_contrast(lake, 1.5, 0.5)
+    lake.write_image("new_lake.png")
