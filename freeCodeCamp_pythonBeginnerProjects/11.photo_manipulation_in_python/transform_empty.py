@@ -29,7 +29,17 @@ def blur(image, kernel_size):
     # kernel size is the number of pixels to take into account when applying the blur
     # (ie kernel_size = 3 would be neighbors to the left/right, top/bottom, and diagonals)
     # kernel size should always be an *odd* number
-    pass
+    side_size = kernel_size // 2
+    x, y, c = image.array.shape
+    new_image = Image(x, y, c)
+    for i in range(x):
+        for j in range(y):
+            sum = np.zeros(c)
+            for i_c in range(max(0, i - side_size), min(i + 1 + side_size, x)):
+                for j_c in range(max(0, j - side_size), min(j + 1 + side_size, y)):
+                    sum += image.array[i_c, j_c]
+            new_image.array[i, j] = sum / (kernel_size**2)
+    image.array = new_image.array
 
 
 def apply_kernel(image, kernel):
@@ -39,18 +49,35 @@ def apply_kernel(image, kernel):
     # [1 0 -1]
     # [2 0 -2]
     # [1 0 -1]
-    pass
+    side_size = len(kernel[0]) // 2
+    print(side_size)
+    x, y, c = image.array.shape
+    new_image = Image(x, y, c)
+    for i in range(x):
+        for j in range(y):
+            sum = np.zeros(c)
+            for i_c in range(max(0, i - side_size), min(i + 1 + side_size, x)):
+                for j_c in range(max(0, j - side_size), min(j + 1 + side_size, y)):
+                    i_v = i_c - i + side_size
+                    j_v = j_c - j + side_size
+                    kernel_value = kernel[i_v, j_v]
+                    sum += image.array[i_c, j_c] * kernel_value
+            new_image.array[i, j] = sum
+    image.array = new_image.array
 
 
 def combine_images(image1, image2):
-    # let's combine two images using the squared sum of squares: value = sqrt(value_1**2, value_2**2)
-    # size of image1 and image2 MUST be the same
-    pass
+    x, y, c = image1.array.shape
+    new_image = Image(x, y, c)
+    new_image.array = (image1.array**2 + image2.array**2) ** 0.5
+    return new_image
 
 
 if __name__ == "__main__":
     lake = Image(filename="lake.png")
     city = Image(filename="city.png")
 
-    adjust_contrast(lake, 1.5, 0.5)
-    lake.write_image("new_lake.png")
+    new_image = combine_images(
+        Image(filename="new_city.png"), Image(filename="new_lake.png")
+    )
+    new_image.write_image("great_city.png")
