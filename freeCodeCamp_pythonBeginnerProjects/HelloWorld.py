@@ -1,5 +1,2 @@
-import string
-
-txt = "Good     night Sam!"
-txt = txt.split()
-print(txt)
+d = {"a": 1, "b": 2, "c": 3}
+print(sum(d.values()))
