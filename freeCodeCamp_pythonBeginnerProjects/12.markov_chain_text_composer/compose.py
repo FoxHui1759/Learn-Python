@@ -21,28 +21,34 @@ class composer:
         for word in words:
             if word not in self.vertices:
                 self.vertices[word] = Vertex(word)
-                if pre_word:
-                    pre_vertex = self.vertices[pre_word]
-                    if word in pre_vertex.next_vertices:
-                        pre_vertex.frequency[pre_vertex.nex_vertices.find(word)] += 1
-                    else:
-                        pre_vertex.next_vertices.append(word)
-                        pre_vertex.frequency.append(1)
+            if pre_word:
+                pre_vertex = self.vertices[pre_word]
+                if word in pre_vertex.next_vertices:
+                    pre_vertex.frequency[pre_vertex.nex_vertices.find(word)] += 1
+                else:
+                    pre_vertex.next_vertices.append(word)
+                    pre_vertex.frequency.append(1)
                 pre_word = word
 
     def get_weight(self, vertex: Vertex) -> list[int]:
         total = sum(vertex.frequency)
-        return [int(i / total * 100) for i in vertex.frequency]
+        return [i / total * 100 for i in vertex.frequency]
 
-    def get_next_vertex(self, vertex: Vertex) -> None:
-        return random.choice(list(vertex.keys()), weights=self.get_weight(vertex))
+    def get_next_word(self, vertex: Vertex) -> None:
+        w = self.get_weight(vertex)
+        print(w)
+        return random.choices(vertex.next_vertices, weights=w)[0]
 
     def gen_text(self, length: int) -> str:
         words = []
         vertex = random.choice(list(self.vertices.values()))
+        print(vertex)
+        print(vertex.value)
+        print(vertex.next_vertices)
+        print(vertex.frequency)
         for _ in range(length):
             words.append(vertex.value)
-            vertex = self.get_next_vertex(vertex)
+            vertex = self.vertices[self.get_next_word(vertex)]
         return " ".join(words)
 
     def compose(self, target_file_path: str, length: int) -> string:
